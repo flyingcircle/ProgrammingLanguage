@@ -1,0 +1,7 @@
+calling make should also make a 'make' call to the directory '../lexicalAnalyzer' make sure that is the location of the directories.
+
+I have three examples:
+1. program.txt is the example that is legal.  -- legal
+2. NoEndingBlock.txt is missing a block ender. -- illegal
+3. MissingPeriod.txt is a program that has a missing period as the endofline. --illegal
+4. nestedFunctionCall.txt is a file to test function calls inside of function calls -- legal.

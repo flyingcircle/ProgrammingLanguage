@@ -1,0 +1,193 @@
+#include <stdlib.h>
+#include "scopeTable.h"
+#include "lexeme.h"
+#include "parser.h"
+#include "types.h"
+
+char* type(lexeme* getType){
+    return getType->type;
+}
+
+lexeme* evalPlus(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer + rhs->integer);
+}
+
+lexeme* evalTimes(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer * rhs->integer);
+}
+
+lexeme* evalDivide(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer / rhs->integer);
+}
+
+lexeme* evalSubtract(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer - rhs->integer);
+}
+
+lexeme* evalModulus(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer % rhs->integer);
+}
+
+lexeme* evalAnd(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer && rhs->integer);
+}
+
+lexeme* evalOr(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer || rhs->integer);
+}
+
+lexeme* evalNot(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    return newLexeme(NUMBER, !lhs->integer);
+}
+
+lexeme* evalXor(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer != rhs->integer);
+}
+
+lexeme* evalEquals(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs->integer == rhs->integer);
+}
+
+lexeme* evalLessThan(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs < rhs);
+}
+
+lexeme* evalGreaterThan(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs > rhs);
+}
+
+lexeme* evalLessOrEqual(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs <= rhs);
+}
+
+lexeme* evalGreaterOrEqual(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return newLexeme(NUMBER, lhs >= rhs);
+}
+
+lexeme* evalAssign(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    lexeme* rhs = eval(pt->right, scope);
+    return setVariable(pt->left, pt->right, scope);
+}
+
+lexeme* evalReturn(lexeme* pt, lexeme* scope){
+    return eval(pt->left, scope);
+}
+
+lexeme* evalIf(lexeme* pt, lexeme* scope){
+    lexeme* lhs = eval(pt->left, scope);
+    if(lhs->integer)
+        return eval(pt->right, scope);
+    return NULL;
+}
+
+//lexeme* evalElse(lexeme* pt, lexeme* scope)
+
+//lexeme* evalWhile(lexeme* pt, lexeme* scope)
+
+//lexeme* evalFunctionDef(lexeme* pt, lexeme* scope)
+
+lexeme* evalFunctionCall(lexeme* pt, lexeme* scope){
+    lexeme* closure = getVariable(pt->left, scope);
+    lexeme* denv = closure->left;
+    lexeme* params = closure->right->left;
+    lexeme* args = pt->right;
+    lexeme* eargs = evalArgs(args, scope);
+    lexeme* body = closure->right->right;
+    lexeme* xenv = extend(params, earg, denv);
+    return eval(body, xenv);
+}
+
+lexeme* evalArray(lexeme* pt, lexeme* scope){
+    return NULL;
+}
+
+lexeme* eval(lexeme* pt, lexeme* scope){
+    if(strcmp(type(pt), NUMBER) == 0)
+        return pt;
+    if(strcmp(type(pt), STRING) == 0)
+        return pt;
+    if(strcmp(type(pt), VARIABLE) == 0)
+        return getVariable(pt, scope);
+    if(strcmp(type(pt), PLUS) == 0)
+        return evalPlus(pt, scope);
+    if(strcmp(type(pt), TIMES) == 0)
+        return evalTimes(pt, scope);
+    if(strcmp(type(pt), DIVIDE) == 0)
+        return evalDivide(pt, scope);
+    if(strcmp(type(pt), SUBTRACT) == 0)
+        return evalSubtract(pt, scope);
+    if(strcmp(type(pt), MODULUS) == 0)
+        return evalModulus(pt, scope);
+    if(strcmp(type(pt), AND) == 0)
+        return evalAnd(pt, scope);
+    if(strcmp(type(pt), OR) == 0)
+        return evalOr(pt, scope);
+    if(strcmp(type(pt), NOT) == 0)
+        return evalNot(pt, scope);
+    if(strcmp(type(pt), XOR) == 0)
+        return evalXor(pt, scope);
+    if(strcmp(type(pt), EQUALS) == 0)
+        return evalEquals(pt, scope);
+    if(strcmp(type(pt), NOTEQUALS) == 0)
+        return evalXor(pt, scope);
+    if(strcmp(type(pt), LESSTHAN) == 0)
+        return evalLessThan(pt, scope);
+    if(strcmp(type(pt), GREATERTHAN) == 0)
+        return evalGreaterThan(pt, scope);
+    if(strcmp(type(pt), LESSOREQUAL) == 0)
+        return evalLessOrEqual(pt, scope);
+    if(strcmp(type(pt), GREATEROREQUAL) == 0)
+        return evalGreaterOrEqual(pt, scope);
+    if(strcmp(type(pt), ASSIGN) == 0)
+        return evalAssign(pt, scope);
+    if(strcmp(type(pt), RETURN) == 0)
+        return evalReturn(pt, scope);
+    if(strcmp(type(pt), IF) == 0)
+        return evalIf(pt, scope);
+    if(strcmp(type(pt), ELSE) == 0)
+        ;
+    if(strcmp(type(pt), WHILE) == 0)
+        ;
+    if(strcmp(type(pt), FUNCTION_DEF) == 0)
+        ;
+    if(strcmp(type(pt), FUNCTION_CALL) == 0)
+        return evalFunctionCall(pt, scope);
+    if(strcmp(type(pt), ARRAY) == 0)
+        return evalArray(pt, eval);  
+}
+
+int main(int argc, char* argv[]){
+    char* filename; //add filename
+    lexeme* env = extend(ENV, NULL, cons(ENV, NULL, NULL));
+    //possibly add builtins e.g. addBuiltins(env);
+    lexeme* p = parser(filename);
+    eval(p, env);
+}

@@ -1,0 +1,70 @@
+program : statement
+	| statement program
+	| ENDOFINPUT
+
+args : VARIABLE
+     | VARIABLE COMMA args
+
+optArgs : args
+	| *empty*
+
+functionDef : FUNCTION VARIABLE OBRACKET optArgs CBRACKET block
+
+whileStatement : WHILE OBRACKET expression CBRACKET block
+
+optElse : ELSE block
+	| *empty*
+
+ifStatement : IF OBRACKET expression CBRACKET block optElse
+
+block : statement block
+      | SEMICOLON
+
+statement : assignment PERIOD
+	  | ifStatement
+	  | whileStatement
+	  | functionDef
+	  | functionCall PERIOD
+	  | RETURN expression PERIOD
+
+array : COLON optList SEMICOLON
+		  
+assignment : VARIABLE ASSIGN expression
+
+//we have a functionCall separate from varExpression to avoid meaningless
+//expressions that are not functionCalls.
+functionCall : VARIABLE OBRACKET optList CBRACKET
+
+list : expression
+     | expression COMMA list
+
+optList : list
+	| *empty*
+
+expression : primary operator expression
+	   | primary
+
+varExpression : VARIABLE
+	      | VARIABLE OBRACKET optList CBRACKET
+
+primary : NUMBER
+	| STRING
+	| varExpression
+	| array
+	| OBRACKET expression CBRACKET
+			 
+operator : PLUS
+	 | TIMES
+	 | DIVIDE
+	 | SUBTRACT
+	 | MODULUS
+	 | AND
+	 | OR
+	 | NOT
+	 | XOR
+	 | EQUALS
+	 | NOTEQUALS
+	 | GREATERTHAN
+	 | LESSTHAN
+	 | GREATEROREQUAL
+	 | LESSOREQUAL

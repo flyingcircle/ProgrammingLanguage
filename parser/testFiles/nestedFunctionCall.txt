@@ -1,0 +1,5 @@
+moenus funcdef[x, y]
+    revenire x + y.
+;
+
+funcdef[ funcdef[3, 4], funcdef[5, 6]].

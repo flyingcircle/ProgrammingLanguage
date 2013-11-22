@@ -1,0 +1,2 @@
+moenus functionName[ var1, var2]
+	exp = var1.

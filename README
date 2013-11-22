@@ -1,0 +1,7 @@
+This README was written for the test submission to Dr. Lusth.
+
+At the moment I do have the Grammar, Parser, and Recognizer finished. They should compile, and run with "make test"
+
+I also have a "make clean that should clean any dependencies as well.
+
+The environment folder has my current code in the environment. It is not compiling at the moment.

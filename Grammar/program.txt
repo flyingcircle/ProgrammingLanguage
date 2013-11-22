@@ -1,0 +1,35 @@
+#This language is known as the Latin programming language
+ it is based around keywords that would be understood by the
+ international community of Latin speakers.
+ This is a comment block which begins with a '#' and ends with a semicolon.
+;
+
+#function definition - all blocks end in a semicolon;
+#all functions definitions begin with the keyword "moenus";
+moenus functionName [ var1, var2 ]
+	#if statements are defined by the keyword "si" and else by "aut";
+	si [ var1 == var2]
+		revenire var2.
+	;
+	aut 
+		si[ var1 > var2 ]
+			revenire var2.
+		;
+	;
+	#return statement defined by keyword "revenire";
+	revenire [functionName [ var1 + 1, var2 - 2]].
+;
+
+#assignment;
+var3 = 0.
+
+#while loop;
+dum [ var3 < 5 ]
+	var3 = var3 + 1.
+;
+
+#arrays are defined between a colon and a semicolon.;
+arrayvar = : 4, 3, 29;.
+
+#functioncall in the global scope;
+functionName [ 3, 4].
